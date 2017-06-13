@@ -1,1 +1,51 @@
 apply plugin: 'java'
+apply plugin: 'eclipse'
+apply plugin: 'application'
+apply plugin: 'maven'
+
+mainClassName = 'hello.HelloWorld'
+
+// tag::repositories[]
+repositories {
+    mavenCentral()
+}
+// end::repositories[]
+
+// tag::jar[]
+jar {
+    baseName = 'gs-gradle'
+    version =  '0.1.0'
+}
+// end::jar[]
+
+// tag::dependencies[]
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
+
+dependencies {
+    compile "joda-time:joda-time:2.2"
+    testCompile "junit:junit:4.12"
+}
+// end::dependencies[]
+
+// tag::wrapper[]
+// end::wrapper[]
+//
+repositories {
+    maven {
+        url "https://nexus.aerodocs.net/nexus/content/groups/public"
+    }
+}
+
+uploadArchives {
+    repositories {
+        mavenDeployer {
+            repository(url: "https://nexus.aerodocs.net/repository/ife-releases/") {
+                authentication(userName: "ife-publish", password: "************")
+            }
+            pom.version = "1.0"
+            pom.artifactId = "gs-gradle"
+            pom.groupId = "com.example"
+        }
+    }
+}
